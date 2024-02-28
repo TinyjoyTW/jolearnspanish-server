@@ -9,3 +9,4 @@ const transactionSchema = new Schema({
 
 const Transaction = model("Transaction", transactionSchema);
 module.exports = Transaction;
+

@@ -10,5 +10,6 @@ const reviewSchema = new Schema(
   { timestamps: true }
 );
 
-const Transaction = model("Transaction", transactionSchema);
-module.exports = Transaction;
+const Review = model("Review", reviewSchema);
+module.exports = Review;
+

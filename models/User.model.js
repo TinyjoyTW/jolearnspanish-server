@@ -27,7 +27,7 @@ const userSchema = new Schema(
         default: "https://i.ibb.co/YpvBg3g/default-profile-picture.jpg",
       },
     },
-    coursesEnrolled: { type: Schema.Types.ObjectId, ref: "Course" },
+    coursesEnrolled: [{ type: Schema.Types.ObjectId, ref: "Course" }],
   },
   {
     timestamps: true,

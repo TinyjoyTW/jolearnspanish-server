@@ -25,7 +25,7 @@ const courseSchema = new Schema(
       enum: ["A1", "A2", "B1", "B2", "C1"],
     },
     price: { type: Number, required: true },
-    studentsEnrolled: { type: Schema.Types.ObjectId, ref: "User" },
+    studentsEnrolled: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
   {
     timestamps: true,
