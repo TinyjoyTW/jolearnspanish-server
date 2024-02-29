@@ -6,7 +6,7 @@ const Transaction = require("../models/Transaction.model");
 //  GET /api/transactions -  Retrieves all transactions
 router.get("/transactions", (req, res, next) => {
   Transaction.find()
-    .populate("user", "course")
+    .populate("user course")
     .then((allTransactions) => res.json(allTransactions))
     .catch((err) => res.json(err));
 });
@@ -27,13 +27,11 @@ router.get("/transations/:transactionId", (req, res, next) => {
 
 //  POST /api/transactions  -  Creates a new transaction
 router.post("/transactions", (req, res, next) => {
-  const {
-    user,
-    course,
-    status
-  } = req.body;
+  const { user, course, status } = req.body;
 
   Transaction.create(req.body)
     .then((newTransaction) => res.json(newTransaction))
     .catch((error) => res.json(error));
 });
+
+module.exports = router;

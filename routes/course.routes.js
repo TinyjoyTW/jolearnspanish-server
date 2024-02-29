@@ -6,7 +6,7 @@ const Course = require("../models/Course.model");
 //  GET /api/courses -  Retrieves all courses
 router.get("/courses", (req, res, next) => {
   Course.find()
-    .populate("studentsEnrolled")
+    // .populate("studentsEnrolled")
     .then((allCourses) => res.json(allCourses))
     .catch((err) => res.json(err));
 });

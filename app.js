@@ -20,7 +20,18 @@ app.use("/api", indexRoutes);
 const authRoutes = require("./routes/auth.routes");
 app.use("/auth", authRoutes);
 
-// ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
+const userRoutes = require("./routes/user.routes");
+app.use("/api", userRoutes);
+
+const courseRoutes = require("./routes/course.routes");
+app.use("/api", courseRoutes);
+
+const transactionRoutes = require("./routes/transaction.routes");
+app.use("/api", transactionRoutes);
+
+const reviewRoutes = require("./routes/review.routes");
+app.use("/api", reviewRoutes);
+
 require("./error-handling")(app);
 
 module.exports = app;
