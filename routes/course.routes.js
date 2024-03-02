@@ -34,7 +34,7 @@ router.post("/courses", (req, res, next) => {
 });
 
 // PUT  /api/courses/:courseId  -  Updates a specific course by id
-router.put("/courses/:courseId", (req, res, next) => {
+router.put("/courses/update/:courseId", (req, res, next) => {
   const { courseId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(courseId)) {
