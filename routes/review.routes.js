@@ -27,12 +27,6 @@ router.get("/reviews/:reviewId", (req, res, next) => {
 
 //  POST /api/reviews  -  Creates a new review
 router.post("/reviews", (req, res, next) => {
-  const {
-    user,
-    course,
-    rating,
-    comment,
-  } = req.body;
 
   Review.create(req.body)
     .then((newReview) => res.json(newReview))

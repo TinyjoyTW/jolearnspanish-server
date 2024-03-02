@@ -27,7 +27,6 @@ router.get("/transations/:transactionId", (req, res, next) => {
 
 //  POST /api/transactions  -  Creates a new transaction
 router.post("/transactions", (req, res, next) => {
-  const { user, course, status } = req.body;
 
   Transaction.create(req.body)
     .then((newTransaction) => res.json(newTransaction))

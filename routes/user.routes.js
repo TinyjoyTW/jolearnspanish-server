@@ -4,15 +4,15 @@ const router = express.Router();
 const User = require("../models/User.model");
 
 //  GET /api/users -  Retrieves all users that are NOT admins
-router.get("/users", (req, res, next) => {
-    if(!User.isAdmin) {
-      User.find()
-        .then((allUsers) => res.json(allUsers))
-        .catch((err) => res.json(err));
-    } else {
+// router.get("/users", (req, res, next) => {
+//     if(!User.isAdmin) {
+//       User.find()
+//         .then((allUsers) => res.json(allUsers))
+//         .catch((err) => res.json(err));
+//     } else {
 
-    }
-});
+//     }
+// });
 
 //  GET /api/users/:userId -  Retrieves a specific user by id
 router.get("/users/:userId", (req, res, next) => {

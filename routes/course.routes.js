@@ -27,13 +27,6 @@ router.get("/courses/:courseId", (req, res, next) => {
 
 //  POST /api/courses  -  Creates a new course
 router.post("/courses", (req, res, next) => {
-  const {
-    title,
-    category,
-    level,
-    price,
-    studentsEnrolled: [],
-  } = req.body;
 
   Course.create(req.body)
     .then((newCourse) => res.json(newCourse))

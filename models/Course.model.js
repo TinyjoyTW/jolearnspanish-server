@@ -6,6 +6,7 @@ const courseSchema = new Schema(
       type: String,
       required: true,
     },
+    image: String,
     category: {
       type: String,
       required: true,
@@ -24,7 +25,7 @@ const courseSchema = new Schema(
       required: true,
       enum: ["A1", "A2", "B1", "B2", "C1"],
     },
-    price: { type: Number, required: true },
+    price: String,
     studentsEnrolled: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
   {

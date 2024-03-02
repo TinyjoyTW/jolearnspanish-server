@@ -3,11 +3,11 @@ const { Schema, model } = require("mongoose");
 const userSchema = new Schema(
   {
     isAdmin: { type: Boolean, default: false },
-    name: {
-      type: String,
-      required: [true, "Username is required."],
-      unique: true,
-    },
+    // name: {
+    //   type: String,
+    //   required: [true, "Name is required."],
+    //   unique: true,
+    // },
     email: {
       type: String,
       required: [true, "Email is required."],
