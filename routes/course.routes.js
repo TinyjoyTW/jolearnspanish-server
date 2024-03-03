@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const Course = require("../models/Course.model");
+const { isAdmin } = require("../middleware/isAdmin.middleware");
+const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 
 //  GET /api/courses -  Retrieves all courses
 router.get("/courses", (req, res, next) => {
@@ -26,29 +28,33 @@ router.get("/courses/:courseId", (req, res, next) => {
 });
 
 //  POST /api/courses  -  Creates a new course
-router.post("/courses", (req, res, next) => {
-
+router.post("/courses", isAuthenticated, isAdmin, (req, res, next) => {
   Course.create(req.body)
     .then((newCourse) => res.json(newCourse))
     .catch((error) => res.json(error));
 });
 
 // PUT  /api/courses/:courseId  -  Updates a specific course by id
-router.put("/courses/update/:courseId", (req, res, next) => {
-  const { courseId } = req.params;
+router.put(
+  "/courses/:courseId",
+  isAuthenticated,
+  isAdmin,
+  (req, res, next) => {
+    const { courseId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(courseId)) {
-    res.status(400).json({ message: "Course id is not valid" });
-    return;
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      res.status(400).json({ message: "Course id is not valid" });
+      return;
+    }
+
+    Course.findByIdAndUpdate(courseId, req.body, { new: true })
+      .then((updatedCourse) => res.json(updatedCourse))
+      .catch((error) => res.json(error));
   }
-
-  Course.findByIdAndUpdate(courseId, req.body, { new: true })
-    .then((updatedCourse) => res.json(updatedCourse))
-    .catch((error) => res.json(error));
-});
+);
 
 // DELETE  /api/courses/:courseId  -  Deletes a specific course by id
-router.delete("/courses/:courseId", (req, res, next) => {
+router.delete("/courses/:courseId", isAuthenticated, isAdmin, (req, res, next) => {
   const { courseId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(courseId)) {
@@ -56,7 +62,7 @@ router.delete("/courses/:courseId", (req, res, next) => {
     return;
   }
 
-  Course.findByIdAndRemove(courseId)
+  Course.findByIdAndDelete(courseId)
     .then(() =>
       res.json({
         message: `Course with ${courseId} is removed successfully.`,

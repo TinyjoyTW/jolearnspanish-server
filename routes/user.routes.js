@@ -2,6 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const User = require("../models/User.model");
+const { isAuthenticated } = require("../middleware/jwt.middleware");
+const {isAdmin} = require("../middleware/isAdmin.middleware")
+
 
 //  GET /api/users -  Retrieves all users that are NOT admins
 // router.get("/users", (req, res, next) => {
@@ -31,7 +34,7 @@ router.get("/users/:userId", (req, res, next) => {
 
 
 // PUT  /api/users/:userId  -  Updates a specific user by id
-router.put("/users/:userId", (req, res, next) => {
+router.put("/users/:userId", isAuthenticated, (req, res, next) => {
   const { userId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -45,7 +48,7 @@ router.put("/users/:userId", (req, res, next) => {
 });
 
 // DELETE  /api/users/:userId  -  Deletes a specific user by id
-router.delete("/users/:userId", (req, res, next) => {
+router.delete("/users/:userId", isAuthenticated, isAdmin, (req, res, next) => {
   const { userId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(userId)) {

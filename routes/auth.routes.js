@@ -8,7 +8,7 @@ const saltRounds = 10;
 
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
-  const {email, password } = req.body;
+  const { email, password } = req.body;
 
   if (email === "" || password === "") {
     res.status(400).json({ message: "Provide email, password and name" });
@@ -34,7 +34,6 @@ router.post("/signup", (req, res, next) => {
 
   User.findOne({ email })
     .then((user) => {
-
       if (user) {
         res.status(400).json({ message: "User already exists." });
         return;
@@ -43,11 +42,10 @@ router.post("/signup", (req, res, next) => {
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashedPassword = bcrypt.hashSync(password, salt);
 
-      return User.create({email, password: hashedPassword });
+      return User.create({ email, password: hashedPassword });
     })
     .then((newUser) => {
-
-      const {email, _id } = newUser;
+      const { email, _id } = newUser;
 
       const user = { email, _id };
 
@@ -75,7 +73,7 @@ router.post("/login", (req, res, next) => {
       const passwordCorrect = bcrypt.compareSync(password, foundUser.password);
 
       if (passwordCorrect) {
-        const { _id, email} = foundUser;
+        const { _id, email } = foundUser;
 
         const payload = { _id, email };
 
@@ -94,7 +92,9 @@ router.post("/login", (req, res, next) => {
 
 // GET  /auth/verify  -  Used to verify JWT stored on the client
 router.get("/verify", isAuthenticated, (req, res, next) => {
-  res.status(200).json(req.payload);
+  User.findById(req.payload._id).then(({isAdmin}) => {
+    res.status(200).json({ ...req.payload, isAdmin });
+  });
 });
 
 module.exports = router;
