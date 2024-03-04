@@ -30,6 +30,9 @@ app.use("/api", transactionRoutes);
 const reviewRoutes = require("./routes/review.routes");
 app.use("/api", reviewRoutes);
 
+const videosRoutes = require("./routes/videos.routes");
+app.use("/api", videosRoutes);
+
 require("./error-handling")(app);
 
 module.exports = app;
