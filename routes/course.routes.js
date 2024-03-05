@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const Course = require("../models/Course.model");
+const User = require("../models/User.model");
 const { isAdmin } = require("../middleware/isAdmin.middleware");
 const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 
@@ -68,6 +69,33 @@ router.delete("/courses/:courseId", isAuthenticated, isAdmin, (req, res, next) =
         message: `Course with ${courseId} is removed successfully.`,
       })
     )
+    .catch((error) => res.json(error));
+});
+
+router.post("/courses/:courseId/enroll", isAuthenticated, (req, res, next) => {
+  const { courseId } = req.params;
+  const userId = req.payload._id;
+
+  if (!mongoose.Types.ObjectId.isValid(courseId)) {
+    res.status(400).json({ message: "Course id is not valid" });
+    return;
+  }
+  // Waiting for two promises to fulfill
+  Promise.all([
+    User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { coursesEnrolled: courseId } },
+      { new: true }
+    ),
+    Course.findByIdAndUpdate(
+      courseId,
+      //addToSet makes sure what we're adding is unique
+      { $addToSet: { studentsEnrolled: userId } },
+      { new: true }
+    ),
+  ])
+    // The result is an array of two objects from two promises, but we only want to send the second result to the frontend.
+    .then((updatedAll) => res.json(updatedAll[1]))
     .catch((error) => res.json(error));
 });
 
