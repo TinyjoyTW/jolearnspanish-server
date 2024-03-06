@@ -14,6 +14,13 @@ router.get("/courses", (req, res, next) => {
     .catch((err) => res.json(err));
 });
 
+// GET /api/sum-of-courses - Retrieve the total amount of courses
+router.get("/sum-of-courses", (req, res, next) => {
+  Course.find()
+    .then((allCourses) => res.json(allCourses.length))
+    .catch((err) => res.json(err));
+});
+
 //  GET /api/courses/:courseId -  Retrieves a specific course by id
 router.get("/courses/:courseId", (req, res, next) => {
   const { courseId } = req.params;
@@ -32,11 +39,25 @@ router.get("/courses/:courseId", (req, res, next) => {
 router.post("/courses", isAuthenticated, isAdmin, (req, res, next) => {
   Course.create(req.body)
     .then((newCourse) => res.json(newCourse))
-    .catch((error) => res.json(error));
+    .catch((error) => res.status(400).json({ message: "Input not valid." }));
 });
 
 // PUT  /api/courses/:courseId  -  Updates a specific course by id
-router.put(
+router.put("/courses/:courseId", isAuthenticated, isAdmin, (req, res, next) => {
+  const { courseId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(courseId)) {
+    res.status(400).json({ message: "Course id is not valid" });
+    return;
+  }
+
+  Course.findByIdAndUpdate(courseId, req.body, { new: true })
+    .then((updatedCourse) => res.json(updatedCourse))
+    .catch((error) => res.json(error));
+});
+
+// DELETE  /api/courses/:courseId  -  Deletes a specific course by id
+router.delete(
   "/courses/:courseId",
   isAuthenticated,
   isAdmin,
@@ -48,29 +69,15 @@ router.put(
       return;
     }
 
-    Course.findByIdAndUpdate(courseId, req.body, { new: true })
-      .then((updatedCourse) => res.json(updatedCourse))
+    Course.findByIdAndDelete(courseId)
+      .then(() =>
+        res.json({
+          message: `Course with ${courseId} is removed successfully.`,
+        })
+      )
       .catch((error) => res.json(error));
   }
 );
-
-// DELETE  /api/courses/:courseId  -  Deletes a specific course by id
-router.delete("/courses/:courseId", isAuthenticated, isAdmin, (req, res, next) => {
-  const { courseId } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(courseId)) {
-    res.status(400).json({ message: "Course id is not valid" });
-    return;
-  }
-
-  Course.findByIdAndDelete(courseId)
-    .then(() =>
-      res.json({
-        message: `Course with ${courseId} is removed successfully.`,
-      })
-    )
-    .catch((error) => res.json(error));
-});
 
 router.post("/courses/:courseId/enroll", isAuthenticated, (req, res, next) => {
   const { courseId } = req.params;
