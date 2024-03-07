@@ -11,6 +11,13 @@ router.get("/reviews", (req, res, next) => {
     .catch((err) => res.json(err));
 });
 
+// GET /api/sum-of-reviews - Retrieve the total amount of reviews 
+router.get("/sum-of-reviews", (req, res, next) => {
+  Review.find()
+    .then((sumOfReviews) => res.json(sumOfReviews.length))
+    .catch((err) => res.json(err));
+});
+
 //  GET /api/reviews/:reviewId -  Retrieves a specific review by id
 router.get("/reviews/:reviewId", (req, res, next) => {
   const { reviewId } = req.params;

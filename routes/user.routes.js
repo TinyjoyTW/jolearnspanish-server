@@ -3,19 +3,27 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const User = require("../models/User.model");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
-const {isAdmin} = require("../middleware/isAdmin.middleware")
-
+const { isAdmin } = require("../middleware/isAdmin.middleware");
 
 //  GET /api/users -  Retrieves all users that are NOT admins
-// router.get("/users", (req, res, next) => {
-//     if(!User.isAdmin) {
-//       User.find()
-//         .then((allUsers) => res.json(allUsers))
-//         .catch((err) => res.json(err));
-//     } else {
+router.get("/non-admin-users", isAuthenticated, isAdmin, (req, res, next) => {
+  User.find({ isAdmin: false })
+    .populate("coursesEnrolled")
+    .then((nonAdminUsers) => res.json(nonAdminUsers))
+    .catch((err) => res.json(err));
+});
 
-//     }
-// });
+// GET /api/sum-of-users - Retrieve the total amount of user excluding admins
+router.get(
+  "/sum-of-non-admin-users",
+  isAuthenticated,
+  isAdmin,
+  (req, res, next) => {
+    User.find({ isAdmin: false })
+      .then((sumOfNonUsers) => res.json(sumOfNonUsers.length))
+      .catch((err) => res.json(err));
+  }
+);
 
 //  GET /api/users/:userId -  Retrieves a specific user by id
 router.get("/users/:userId", (req, res, next) => {
@@ -31,7 +39,6 @@ router.get("/users/:userId", (req, res, next) => {
     .then((user) => res.status(200).json(user))
     .catch((error) => res.json(error));
 });
-
 
 // PUT  /api/users/:userId  -  Updates a specific user by id
 router.put("/users/:userId", isAuthenticated, (req, res, next) => {

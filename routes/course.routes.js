@@ -9,13 +9,12 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 //  GET /api/courses -  Retrieves all courses
 router.get("/courses", (req, res, next) => {
   Course.find()
-    // .populate("studentsEnrolled")
     .then((allCourses) => res.json(allCourses))
     .catch((err) => res.json(err));
 });
 
 // GET /api/sum-of-courses - Retrieve the total amount of courses
-router.get("/sum-of-courses", (req, res, next) => {
+router.get("/sum-of-courses", isAuthenticated, isAdmin, (req, res, next) => {
   Course.find()
     .then((allCourses) => res.json(allCourses.length))
     .catch((err) => res.json(err));
