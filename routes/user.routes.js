@@ -8,7 +8,7 @@ const { isAdmin } = require("../middleware/isAdmin.middleware");
 //  GET /api/users -  Retrieves all users that are NOT admins
 router.get("/non-admin-users", isAuthenticated, isAdmin, (req, res, next) => {
   User.find({ isAdmin: false })
-    .populate("coursesEnrolled")
+    // .populate("coursesEnrolled")
     .then((nonAdminUsers) => res.json(nonAdminUsers))
     .catch((err) => res.json(err));
 });
@@ -26,7 +26,7 @@ router.get(
 );
 
 //  GET /api/users/:userId -  Retrieves a specific user by id
-router.get("/users/:userId", (req, res, next) => {
+router.get("/users/:userId", isAuthenticated, isAdmin, (req, res, next) => {
   const { userId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(userId)) {
